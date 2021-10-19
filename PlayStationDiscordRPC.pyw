@@ -72,7 +72,7 @@ class Window(QSystemTrayIcon):
         self.currentGame = gameTitle
 
     def loadConfig(self):
-        self.config = yaml.load(open("config.yml", "r"))
+        self.config = yaml.load(open("config.yml", "r"), Loader=yaml.FullLoader)
 
     def setupMenu(self):
         menu = QMenu()
@@ -96,11 +96,11 @@ class Window(QSystemTrayIcon):
         self.discord.close()
         sys.exit(0)
 
-
-app = QApplication(sys.argv)
-screen = Window()
-screen.show()
-sys.exit(app.exec_())
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    screen = Window()
+    screen.show()
+    sys.exit(app.exec_())
 
 
 
