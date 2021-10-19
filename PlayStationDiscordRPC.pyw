@@ -101,13 +101,3 @@ if __name__ == '__main__':
     screen = Window()
     screen.show()
     sys.exit(app.exec_())
-
-
-
-
-
-
-
-
-
-m
