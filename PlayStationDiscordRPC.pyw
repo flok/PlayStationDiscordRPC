@@ -68,8 +68,7 @@ class Window(QSystemTrayIcon):
         if self.currentGame == gameTitle:
             return
 
-
-        self.discord.update(state="Currently in game", details=gameTitle, large_image=imageID, small_image="playstation", start=time.time())
+        self.discord.update(state="Currently in game", details=gameTitle, large_image=imageID, small_image="playstation", start=time.time(),small_text="PS5", large_text=gameTitle)
 
         self.currentGame = gameTitle
 
