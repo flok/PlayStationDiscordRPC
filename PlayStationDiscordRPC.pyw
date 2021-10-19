@@ -75,9 +75,21 @@ class Window(QSystemTrayIcon):
     def loadConfig(self):
         self.config = yaml.load(open("config.yml", "r"), Loader=yaml.FullLoader)
 
+    def saveConfig(self):
+        yaml.safe_dump(self.config, open('config.yml', 'w'))
+
+
+    def setStatus(self, state):
+        self.config['enabled'] = state
+
+        self.saveConfig()
+
     def setupMenu(self):
         menu = QMenu()
         toggleEnable = menu.addAction('Enable')
+        toggleEnable.setCheckable(True)
+        toggleEnable.setChecked(self.config['enabled'])
+        toggleEnable.triggered.connect(self.setStatus)
         settingsAction = menu.addAction('Settings')
         settingsAction.triggered.connect(self.openSettings)
         exitAction = menu.addAction('Quit')
@@ -87,7 +99,7 @@ class Window(QSystemTrayIcon):
 
     def openSettings(self):
         if self.settingsWindow is None:
-            self.settingsWindow = SettingsUI(self.config)
+            self.settingsWindow = SettingsUI(self.config, self)
             self.settingsWindow.show()
         else:
             self.settingsWindow.show()
@@ -96,6 +108,7 @@ class Window(QSystemTrayIcon):
         self.PSNThread.stop()
         self.discord.clear()
         self.discord.close()
+        self.saveConfig()
         sys.exit(0)
 
 if __name__ == '__main__':
