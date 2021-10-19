@@ -67,7 +67,7 @@ class Window(QSystemTrayIcon):
             return
 
 
-        self.discord.update(state="Currently in game", details=gameTitle, large_image=imageID, start=time.time())
+        self.discord.update(state="Currently in game", details=gameTitle, large_image=imageID, small_image="playstation", start=time.time())
 
         self.currentGame = gameTitle
 
