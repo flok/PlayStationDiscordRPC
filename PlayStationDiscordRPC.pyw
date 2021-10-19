@@ -10,6 +10,8 @@ from pypresence import Presence
 from Settings import SettingsUI
 import time
 
+CLIENT_ID = 898856060058763286
+
 
 class Window(QSystemTrayIcon):
     settingsWindow = None
@@ -19,8 +21,8 @@ class Window(QSystemTrayIcon):
     currentGame = None
     def __init__(self) -> None:
         QSystemTrayIcon.__init__(self)
-        self.setIcon(QIcon('images/playstation.png'))
 
+        self.setIcon(QIcon('images/playstation.png'))
         self.setVisible(True)
 
         self.loadConfig()
@@ -38,7 +40,7 @@ class Window(QSystemTrayIcon):
         print(f"{self.psn.me()}")
 
     def setupDiscord(self):
-        self.discord = Presence(898856060058763286)
+        self.discord = Presence(CLIENT_ID)
         self.discord.connect()
 
     def startPSNThread(self):
@@ -86,13 +88,14 @@ class Window(QSystemTrayIcon):
 
     def openSettings(self):
         if self.settingsWindow is None:
-            self.settingsWindow = SettingsUI()
+            self.settingsWindow = SettingsUI(self.config)
             self.settingsWindow.show()
         else:
-            self.settingsWindow = None
+            self.settingsWindow.show()
 
     def close(self):
         self.PSNThread.stop()
+        self.discord.clear()
         self.discord.close()
         sys.exit(0)
 

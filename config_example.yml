@@ -4,3 +4,4 @@
 # Put the JSON down where NPSSO_HERE is located e.g:
 # ssno: 1DA23DSDS23132DKA54PEWWC
 ssno: NPSSO_HERE
+sample_delay: 30
