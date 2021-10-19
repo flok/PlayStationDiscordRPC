@@ -1,0 +1,4 @@
+pypresence==4.2.0
+PSNAWP==2021.20.6
+PyQt5==5.15.5
+PyYAML==6.0
