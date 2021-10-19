@@ -10,22 +10,59 @@
     <height>189</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>594</width>
+    <height>189</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>594</width>
+    <height>189</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>500</x>
+      <x>410</x>
       <y>130</y>
-      <width>93</width>
-      <height>28</height>
+      <width>164</width>
+      <height>30</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Save</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QCheckBox" name="cb_debug">
+       <property name="text">
+        <string>Debug</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
    <widget class="QWidget" name="">
     <property name="geometry">

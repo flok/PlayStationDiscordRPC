@@ -50,12 +50,13 @@ class Window(QSystemTrayIcon):
 
     def presence(self, presence):
         # set presence for discord with game title
-        print(presence)
+        if self.config['debug']:
+            print(presence)
 
         if 'gameTitleInfoList' not in presence.keys():
+            # clear status of discord and current game
             self.discord.clear()
             self.currentGame = ""
-            # clear if something was there
             return
 
 
@@ -70,6 +71,7 @@ class Window(QSystemTrayIcon):
 
         self.discord.update(state="Currently in game", details=gameTitle, large_image=imageID, small_image="playstation", start=time.time(),small_text="PS5", large_text=gameTitle)
 
+        # set current gameTitle to current game
         self.currentGame = gameTitle
 
     def loadConfig(self):

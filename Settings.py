@@ -23,6 +23,7 @@ class SettingsUI(QMainWindow):
         # load values from config and apply at startup
         self.ui.lE_ssno.setText(self.config['ssno'])
         self.ui.slider_delay.setValue(self.config['sample_delay'])
+        self.ui.cb_debug.setChecked(self.config['debug'])
 
         # setup connection
         self.ui.pushButton.clicked.connect(self.press_save)
@@ -33,6 +34,7 @@ class SettingsUI(QMainWindow):
         # save values from interface into global config
         self.config['ssno'] = self.ui.lE_ssno.text()
         self.config['sample_delay'] = self.ui.slider_delay.value()
+        self.config['debug'] = self.ui.cb_debug.isChecked()
 
         # save config to file
         self.parent.saveConfig()
