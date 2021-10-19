@@ -27,4 +27,4 @@ class PSNThread(QtCore.QThread):
         while self.enable or self.parent().isRunning():
             user = self.psn.user(account_id=self.psn.me().get_account_id()).get_presence()
             self.user_presence.emit(user)
-            time.sleep(30)
+            time.sleep(self.parent.config['sample_delay'])
