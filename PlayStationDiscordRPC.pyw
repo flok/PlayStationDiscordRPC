@@ -59,17 +59,24 @@ class Window(QSystemTrayIcon):
             self.currentGame = ""
             return
 
-
         gameinfo = presence['gameTitleInfoList'][0]
+        gameStatus = None
+        if 'gameStatus' in gameinfo:
+            gameStatus = gameinfo['gameStatus']
         gameTitle = gameinfo['titleName']
+
+
         imageID = gameinfo['npTitleId'].lower()
 
         # abort updating the game status with the same game
         # if we do this we reset the timer
-        if self.currentGame == gameTitle:
+        if self.currentGame == gameTitle and gameStatus is None:
             return
 
-        self.discord.update(state="Currently in game", details=gameTitle, large_image=imageID, small_image="playstation", start=time.time(),small_text="PS5", large_text=gameTitle)
+        if gameStatus is None:
+            self.discord.update(state="Currently in game", details=gameTitle, large_image=imageID, small_image="playstation", start=time.time(),small_text="PlayStation 5", large_text=gameTitle)
+        else:
+            self.discord.update(state=gameStatus, details=gameTitle, large_image=imageID, small_image="playstation", start=time.time(), small_text="PlayStation 5", large_text=gameTitle)
 
         # set current gameTitle to current game
         self.currentGame = gameTitle
