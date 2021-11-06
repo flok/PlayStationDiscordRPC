@@ -161,6 +161,8 @@ class Window(QSystemTrayIcon):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setApplicationName("PlayStationDiscordRPC")
+    app.setApplicationVersion('1.0.0')
     app.setWindowIcon(QtGui.QIcon('images/playstation.ico'))
     screen = Window()
     screen.show()
