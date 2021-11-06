@@ -37,7 +37,6 @@ class SettingsUI(QMainWindow):
         if event == QtGui.QCloseEvent:
             self.hide()
 
-
     def press_save(self):
 
         # save values from interface into global config

@@ -1,6 +1,7 @@
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon
 from psnawp_api import psnawp as psn
+from psnawp_api import psnawp_exceptions
 from PyQt5.QtWidgets import *
 from PyQt5 import *
 from  PyQt5.QtCore import *
@@ -46,16 +47,27 @@ class Window(QSystemTrayIcon):
 
         self.startPSNThread()
 
+
+    def connectPSN(self):
+        try:
+            if self.config['debug']:
+                print(f"Initialize PSN API with SSNO: {self.config['ssno']}")
+            self.psn = psn.PSNAWP(self.config['ssno'])
+        except psnawp_exceptions.PSNAWPAuthenticationError:
+            self.settingsWindow = SettingsUI(self.config, self)
+            self.settingsWindow.show()
+
     def setupPSN(self):
         if self.config['ssno'] == 'NPSSO_HERE':
             self.settingsWindow = SettingsUI(self.config, self)
             self.settingsWindow.show()
-            print("set up key")
         else:
-            self.psn = psn.PSNAWP(self.config['ssno'])
+            self.connectPSN()
 
 
     def setupDiscord(self):
+        if self.config['debug']:
+            print(f"Initialize Discord presence with client id: {CLIENT_ID}")
         self.discord = Presence(CLIENT_ID)
         self.discord.connect()
 
@@ -110,8 +122,7 @@ class Window(QSystemTrayIcon):
     def saveConfig(self):
         yaml.safe_dump(self.config, open('config.yml', 'w'))
         # everytime we save config a change of the ssno could have taken place we reinitialize the psn api
-        print(f"re init psn with {self.config['ssno']}")
-        self.psn = psn.PSNAWP(self.config['ssno'])
+        self.connectPSN()
         self.PSNThread.start(self.psn)
 
     def setStatus(self, state):
