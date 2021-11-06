@@ -1,4 +1,4 @@
-name: Package App with PyInstaller and Release
+name: Package App with PyInstaller DEV
 
 on:
   workflow_dispatch:
