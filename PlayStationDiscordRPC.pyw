@@ -10,7 +10,7 @@ from PlayStationConnection import PSNThread
 from pypresence import Presence
 from Settings import SettingsUI
 import resources
-from utils import resource_path, config_template
+from utils import config_template
 import time
 
 
