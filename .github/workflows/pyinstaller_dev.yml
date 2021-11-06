@@ -1,0 +1,28 @@
+name: Package App with PyInstaller and Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Package Application
+      uses: JackMcKew/pyinstaller-action-windows@main
+      with:
+        path: ./
+        spec: PlayStationDiscordRPC.spec
+
+    - name: Set Version
+      run: |
+        VER=$(cat VERSION)
+        echo "VERSION=$VER" >> $GITHUB_ENV
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: PlayStationDiscordRPC v${{ env.VERSION }}
+        path: ./dist/windows

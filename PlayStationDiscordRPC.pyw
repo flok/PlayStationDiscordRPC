@@ -114,24 +114,6 @@ class Window(QSystemTrayIcon):
         else:
             self.PSNThread.start()
 
-    """
-    def loadConfig(self):
-        if os.path.exists('config.yml'):
-            self.config = yaml.load(open("config.yml", "r"), Loader=yaml.FullLoader)
-        else:
-            # no config file found, create new one
-
-            open('config.yml', 'w').write(config_template)
-            self.config = yaml.load(open('config.yml', 'r'), Loader=yaml.FullLoader)
-            print(f"config created {self.config}")
-
-    def saveConfig(self):
-        yaml.safe_dump(self.config, open('config.yml', 'w'))
-        # everytime we save config a change of the ssno could have taken place we reinitialize the psn api
-        self.connectPSN()
-        self.PSNThread.start(self.psn)
-    """
-
     def setStatus(self, state):
         self.settings.setValue('enabled', state)
         if state == True:
