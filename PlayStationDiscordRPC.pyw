@@ -5,13 +5,11 @@ from psnawp_api import psnawp_exceptions
 from PyQt5.QtWidgets import *
 from PyQt5 import *
 from  PyQt5.QtCore import *
-import yaml
 import sys, os
 from PlayStationConnection import PSNThread
 from pypresence import Presence
 from Settings import SettingsUI
 import resources
-from utils import config_template
 import time
 
 
@@ -37,7 +35,7 @@ class Window(QSystemTrayIcon):
         self.setIcon(QIcon(':/icons/playstation.ico'))
         self.setVisible(True)
 
-        self.loadConfig()
+        self.loadSettings()
 
         self.setupMenu()
 
@@ -47,26 +45,13 @@ class Window(QSystemTrayIcon):
 
         self.startPSNThread()
 
-
-    def connectPSN(self):
-        try:
-            if self.config['debug']:
-                print(f"Initialize PSN API with SSNO: {self.config['ssno']}")
-            self.psn = psn.PSNAWP(self.config['ssno'])
-        except psnawp_exceptions.PSNAWPAuthenticationError:
-            self.settingsWindow = SettingsUI(self.config, self)
-            self.settingsWindow.show()
-
     def setupPSN(self):
-        if self.config['ssno'] == 'NPSSO_HERE':
-            self.settingsWindow = SettingsUI(self.config, self)
+        if self.settings.value('ssno') == '' or self.settings.value('first_start', type=bool):
             self.settingsWindow.show()
-        else:
-            self.connectPSN()
 
 
     def setupDiscord(self):
-        if self.config['debug']:
+        if self.settings.value('debug', type=bool):
             print(f"Initialize Discord presence with client id: {CLIENT_ID}")
         self.discord = Presence(CLIENT_ID)
         self.discord.connect()
@@ -74,11 +59,11 @@ class Window(QSystemTrayIcon):
     def startPSNThread(self):
         self.PSNThread = PSNThread(self)
         self.PSNThread.user_presence.connect(self.presence)
-        self.PSNThread.start(self.psn)
+        self.PSNThread.start()
 
     def presence(self, presence):
         # set presence for discord with game title
-        if self.config['debug']:
+        if self.settings.value('debug', type=bool):
             print(presence)
 
         if 'gameTitleInfoList' not in presence.keys():
@@ -109,6 +94,27 @@ class Window(QSystemTrayIcon):
         # set current gameTitle to current game
         self.currentGame = gameTitle
 
+    def loadSettings(self):
+        self.settings = QSettings('flok', 'playstationdiscordrpc')
+        # check if settings are empty -> first start up
+        if len(self.settings.allKeys()) == 0:
+            self.settings.setValue('enabled', True)
+            self.settings.setValue('debug', False)
+            self.settings.setValue('sample_delay', 30)
+            self.settings.setValue('ssno', '')
+            self.settings.setValue('first_start', True)
+
+        self.settingsWindow = SettingsUI(self)
+        self.settingsWindow.reconnect_psn.connect(self.reconnect_psn)
+
+    def reconnect_psn(self):
+        if self.PSNThread.isRunning():
+            self.PSNThread.stop()
+            self.PSNThread.start()
+        else:
+            self.PSNThread.start()
+
+    """
     def loadConfig(self):
         if os.path.exists('config.yml'):
             self.config = yaml.load(open("config.yml", "r"), Loader=yaml.FullLoader)
@@ -124,17 +130,18 @@ class Window(QSystemTrayIcon):
         # everytime we save config a change of the ssno could have taken place we reinitialize the psn api
         self.connectPSN()
         self.PSNThread.start(self.psn)
+    """
 
     def setStatus(self, state):
-        self.config['enabled'] = state
-
-        self.saveConfig()
+        self.settings.setValue('enabled', state)
+        if state == True:
+            self.PSNThread.start()
 
     def setupMenu(self):
         menu = QMenu()
         toggleEnable = menu.addAction('Enable')
         toggleEnable.setCheckable(True)
-        toggleEnable.setChecked(self.config['enabled'])
+        toggleEnable.setChecked(self.settings.value('enabled', type=bool))
         toggleEnable.triggered.connect(self.setStatus)
         settingsAction = menu.addAction('Settings')
         settingsAction.triggered.connect(self.openSettings)
@@ -144,11 +151,7 @@ class Window(QSystemTrayIcon):
         self.setContextMenu(menu)
 
     def openSettings(self):
-        if self.settingsWindow is None:
-            self.settingsWindow = SettingsUI(self.config, self)
-            self.settingsWindow.show()
-        else:
-            self.settingsWindow.show()
+        self.settingsWindow.show()
 
     def close(self):
         self.PSNThread.stop()
