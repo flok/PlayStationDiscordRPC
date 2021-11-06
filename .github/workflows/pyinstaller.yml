@@ -20,7 +20,8 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: PlayStationDiscordRPC
-        path: ./dist/windows
+        path: src/dist/windows
+        
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -28,4 +29,4 @@ jobs:
         prerelease: false
         title: "Release Version "
         files: |
-          ./dist/windows/*.exe
+          src/dist/windows/*.exe
