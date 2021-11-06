@@ -1,0 +1,9 @@
+config_template = """# Login into your My PlayStation account.
+# In another tab, go to https://ca.account.sony.com/api/v1/ssocookie
+# If you are logged in you should see the json
+# Put the JSON down where NPSSO_HERE is located e.g:
+# ssno: 1DA23DSDS23132DKA54PEWWC
+enabled: true
+debug: false
+sample_delay: 30
+ssno: NPSSO_HERE"""

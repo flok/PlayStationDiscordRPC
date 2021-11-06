@@ -38,7 +38,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>410</x>
@@ -64,11 +64,11 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>30</y>
       <width>571</width>
       <height>56</height>
      </rect>
@@ -120,6 +120,25 @@
       </layout>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="label_get_ssno">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>471</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Login to your PS Account on the PlayStation Site and get your SSNO from : &lt;a href=&quot;https://ca.account.sony.com/api/v1/ssocookie&quot;&gt;HERE&lt;/a&gt;</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::RichText</enum>
+    </property>
+    <property name="textInteractionFlags">
+     <set>Qt::TextBrowserInteraction</set>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

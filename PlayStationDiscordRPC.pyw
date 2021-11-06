@@ -1,16 +1,28 @@
+from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon
 from psnawp_api import psnawp as psn
 from PyQt5.QtWidgets import *
 from PyQt5 import *
 from  PyQt5.QtCore import *
 import yaml
-import sys
+import sys, os
 from PlayStationConnection import PSNThread
 from pypresence import Presence
 from Settings import SettingsUI
+import resources
+from utils import resource_path, config_template
 import time
 
-CLIENT_ID = 898856060058763286
+
+try:
+    from PyQt5.QtWinExtras import QtWin
+    appid = 'flok.playstationdiscordrpc'
+    QtWin.setCurrentProcessExplicitAppUserModelID(appid)
+except ImportError:
+    pass
+
+
+CLIENT_ID = 906197927968526358
 
 
 class Window(QSystemTrayIcon):
@@ -21,8 +33,7 @@ class Window(QSystemTrayIcon):
     currentGame = None
     def __init__(self) -> None:
         QSystemTrayIcon.__init__(self)
-
-        self.setIcon(QIcon('images/playstation.png'))
+        self.setIcon(QIcon(':/icons/playstation.ico'))
         self.setVisible(True)
 
         self.loadConfig()
@@ -36,8 +47,13 @@ class Window(QSystemTrayIcon):
         self.startPSNThread()
 
     def setupPSN(self):
-        self.psn = psn.PSNAWP(self.config['ssno'])
-        print(f"{self.psn.me()}")
+        if self.config['ssno'] == 'NPSSO_HERE':
+            self.settingsWindow = SettingsUI(self.config, self)
+            self.settingsWindow.show()
+            print("set up key")
+        else:
+            self.psn = psn.PSNAWP(self.config['ssno'])
+
 
     def setupDiscord(self):
         self.discord = Presence(CLIENT_ID)
@@ -82,11 +98,21 @@ class Window(QSystemTrayIcon):
         self.currentGame = gameTitle
 
     def loadConfig(self):
-        self.config = yaml.load(open("config.yml", "r"), Loader=yaml.FullLoader)
+        if os.path.exists('config.yml'):
+            self.config = yaml.load(open("config.yml", "r"), Loader=yaml.FullLoader)
+        else:
+            # no config file found, create new one
+
+            open('config.yml', 'w').write(config_template)
+            self.config = yaml.load(open('config.yml', 'r'), Loader=yaml.FullLoader)
+            print(f"config created {self.config}")
 
     def saveConfig(self):
         yaml.safe_dump(self.config, open('config.yml', 'w'))
-
+        # everytime we save config a change of the ssno could have taken place we reinitialize the psn api
+        print(f"re init psn with {self.config['ssno']}")
+        self.psn = psn.PSNAWP(self.config['ssno'])
+        self.PSNThread.start(self.psn)
 
     def setStatus(self, state):
         self.config['enabled'] = state
@@ -117,11 +143,11 @@ class Window(QSystemTrayIcon):
         self.PSNThread.stop()
         self.discord.clear()
         self.discord.close()
-        self.saveConfig()
         sys.exit(0)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setWindowIcon(QtGui.QIcon('images/playstation.ico'))
     screen = Window()
     screen.show()
     sys.exit(app.exec_())
