@@ -21,3 +21,12 @@ jobs:
       with:
         name: PlayStationDiscordRPC
         path: ./dist/windows
+
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: false
+        title: "Release Version "
+        files: |
+          src/dist/windows/*.exe
