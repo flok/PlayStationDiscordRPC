@@ -14,7 +14,7 @@ class SettingsUI(QMainWindow):
         super(SettingsUI, self).__init__()
         self.ui = ui()
         self.ui.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(':/icons/playstation.ico'))
+        self.setWindowIcon(QtGui.QIcon(':/icons/icon.png'))
 
         self.parent = parent
         """Pointer to QSystemTrayIcon"""
@@ -37,8 +37,8 @@ class SettingsUI(QMainWindow):
         QtGui.QDesktopServices.openUrl(QtCore.QUrl(link))
 
     def closeEvent(self, event):
-        if event == QtGui.QCloseEvent:
-            self.hide()
+        event.ignore()
+        self.hide()
 
     def press_save(self):
 

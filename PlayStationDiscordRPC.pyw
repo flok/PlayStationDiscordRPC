@@ -1,7 +1,6 @@
 from PyQt5 import QtGui
+from PyQt5 import QtCore
 from PyQt5.QtGui import QIcon
-from psnawp_api import psnawp as psn
-from psnawp_api import psnawp_exceptions
 from PyQt5.QtWidgets import *
 from PyQt5 import *
 from  PyQt5.QtCore import *
@@ -9,6 +8,7 @@ import sys, os
 from PlayStationConnection import PSNThread
 from pypresence import Presence
 from Settings import SettingsUI
+from Status import StatusUI
 import resources
 import time
 
@@ -25,17 +25,23 @@ CLIENT_ID = 906197927968526358
 
 
 class Window(QSystemTrayIcon):
-    settingsWindow = None
-    psn = None
-    config = None
+
     PSNThread = None
     currentGame = None
+    status_update: QtCore.pyqtSignal = QtCore.pyqtSignal(object)
+    update_pos: QtCore.pyqtSignal = QtCore.pyqtSignal(object)
+
+
     def __init__(self) -> None:
         QSystemTrayIcon.__init__(self)
-        self.setIcon(QIcon(':/icons/playstation.ico'))
+        self.setIcon(QIcon(':/icons/icon.png'))
         self.setVisible(True)
+        self.setToolTip("PlayStationDiscordRPC")
+        self.activated.connect(self.click_handler)
 
         self.loadSettings()
+
+        self.setupStatus()
 
         self.setupMenu()
 
@@ -44,6 +50,19 @@ class Window(QSystemTrayIcon):
         self.setupDiscord()
 
         self.startPSNThread()
+
+        print(self.geometry())
+
+    def click_handler(self, reason):
+        print(reason)
+        if reason == QSystemTrayIcon.ActivationReason.DoubleClick:
+            # double click on tray icon
+            self.statusWindow.show()
+            self.statusWindow.timer.start(3000)
+            ...
+
+    def setupStatus(self):
+        self.statusWindow = StatusUI(self)
 
     def setupPSN(self):
         if self.settings.value('ssno') == '' or self.settings.value('first_start', type=bool):
@@ -66,10 +85,13 @@ class Window(QSystemTrayIcon):
         if self.settings.value('debug', type=bool):
             print(presence)
 
+        self.update_pos.emit(self.geometry())
+
         if 'gameTitleInfoList' not in presence.keys():
             # clear status of discord and current game
             self.discord.clear()
             self.currentGame = ""
+            self.status_update.emit(['None'])
             return
 
         gameinfo = presence['gameTitleInfoList'][0]
@@ -88,8 +110,10 @@ class Window(QSystemTrayIcon):
 
         if gameStatus is None:
             self.discord.update(state="Currently in game", details=gameTitle, large_image=imageID, small_image="playstation", start=time.time(),small_text="PlayStation 5", large_text=gameTitle)
+            self.status_update.emit(['Currently in game', gameTitle])
         else:
             self.discord.update(state=gameStatus, details=gameTitle, large_image=imageID, small_image="playstation", start=time.time(), small_text="PlayStation 5", large_text=gameTitle)
+            self.status_update.emit([gameStatus, gameTitle])
 
         # set current gameTitle to current game
         self.currentGame = gameTitle
