@@ -51,15 +51,12 @@ class Window(QSystemTrayIcon):
 
         self.startPSNThread()
 
-        print(self.geometry())
 
     def click_handler(self, reason):
-        print(reason)
         if reason == QSystemTrayIcon.ActivationReason.DoubleClick:
             # double click on tray icon
             self.statusWindow.show()
             self.statusWindow.timer.start(3000)
-            ...
 
     def setupStatus(self):
         self.statusWindow = StatusUI(self)
@@ -127,6 +124,7 @@ class Window(QSystemTrayIcon):
             self.settings.setValue('sample_delay', 30)
             self.settings.setValue('ssno', '')
             self.settings.setValue('first_start', True)
+            self.settings.setValue('autostart', True)
 
         self.settingsWindow = SettingsUI(self)
         self.settingsWindow.reconnect_psn.connect(self.reconnect_psn)

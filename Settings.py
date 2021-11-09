@@ -1,9 +1,10 @@
-
+import sys
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import *
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from SettingsUI import Ui_MainWindow as ui
+import winreg
 import resources
 
 class SettingsUI(QMainWindow):
@@ -28,6 +29,7 @@ class SettingsUI(QMainWindow):
         self.ui.lE_ssno.setText(self.settings.value('ssno'))
         self.ui.slider_delay.setValue(self.settings.value('sample_delay'))
         self.ui.cb_debug.setChecked(self.settings.value('debug', type=bool))
+        self.ui.cb_autostart.setChecked(self.settings.value('autostart', type=bool))
 
         # setup connection
         self.ui.label_get_ssno.linkActivated.connect(self.openGETSSNO)
@@ -46,6 +48,24 @@ class SettingsUI(QMainWindow):
         self.settings.setValue('ssno', self.ui.lE_ssno.text())
         self.settings.setValue('sample_delay', self.ui.slider_delay.value())
         self.settings.setValue('debug', self.ui.cb_debug.isChecked())
+        self.settings.setValue('autostart', self.ui.cb_autostart.isChecked())
+
+        # update autostart registry
+        if self.ui.cb_autostart.isChecked():
+            try:
+                key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Run", 0, winreg.KEY_ALL_ACCESS)
+                winreg.SetValueEx(key, "PlayStationDiscordRPC", 0, winreg.REG_SZ, sys.argv[0])
+                winreg.CloseKey(key)
+            except OSError:
+                raise OSError('Couldnt add Autostart key inside registry')
+        else:
+            try:
+                key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Run", 0, winreg.KEY_ALL_ACCESS)
+                winreg.DeleteValue(key, "PlayStationDiscordRPC")
+                winreg.CloseKey(key)
+            except OSError:
+                raise OSError('Couldnt find Autostart key inside registry')
+
         # hide window
         self.hide()
 

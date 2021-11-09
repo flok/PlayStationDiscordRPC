@@ -41,13 +41,20 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>340</x>
       <y>130</y>
-      <width>164</width>
+      <width>239</width>
       <height>30</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QCheckBox" name="cb_autostart">
+       <property name="text">
+        <string>AutoStart</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QCheckBox" name="cb_debug">
        <property name="text">

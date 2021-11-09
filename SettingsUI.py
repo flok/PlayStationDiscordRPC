@@ -30,11 +30,14 @@ class Ui_MainWindow(object):
         self.centralwidget.setSizePolicy(sizePolicy)
         self.centralwidget.setObjectName("centralwidget")
         self.layoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.layoutWidget.setGeometry(QtCore.QRect(410, 130, 164, 30))
+        self.layoutWidget.setGeometry(QtCore.QRect(340, 130, 239, 30))
         self.layoutWidget.setObjectName("layoutWidget")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.cb_autostart = QtWidgets.QCheckBox(self.layoutWidget)
+        self.cb_autostart.setObjectName("cb_autostart")
+        self.horizontalLayout_3.addWidget(self.cb_autostart)
         self.cb_debug = QtWidgets.QCheckBox(self.layoutWidget)
         self.cb_debug.setObjectName("cb_debug")
         self.horizontalLayout_3.addWidget(self.cb_debug)
@@ -88,6 +91,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Settings"))
+        self.cb_autostart.setText(_translate("MainWindow", "AutoStart"))
         self.cb_debug.setText(_translate("MainWindow", "Debug"))
         self.pushButton.setText(_translate("MainWindow", "Save"))
         self.label.setText(_translate("MainWindow", "SSNO"))
