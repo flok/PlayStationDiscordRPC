@@ -69,6 +69,7 @@ class Window(QSystemTrayIcon):
     def setupDiscord(self):
         if self.settings.value('debug', type=bool):
             print(f"Initialize Discord presence with client id: {CLIENT_ID}")
+            self.showMessage("PlayStationDiscordRPC", "Initialized Discord Presence", QSystemTrayIcon.MessageIcon.Information, 2000)
         self.discord = Presence(CLIENT_ID)
         self.discord.connect()
 
@@ -140,6 +141,8 @@ class Window(QSystemTrayIcon):
         self.settings.setValue('enabled', state)
         if state == True:
             self.PSNThread.start()
+        else:
+            self.PSNThread.stop()
 
     def setupMenu(self):
         menu = QMenu()

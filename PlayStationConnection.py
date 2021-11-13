@@ -2,12 +2,13 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import time
-from psnawp_api import psnawp
+from psnawp_api import psnawp, psnawp_exceptions
 
 class PSNThread(QtCore.QThread):
     user_presence = QtCore.pyqtSignal(object)
+    psn = None
 
-    def __init__(self, parent=None):
+    def __init__(self, parent = None):
         QThread.__init__(self)
         self.parent = parent
         self.settings = QSettings('flok', 'playstationdiscordrpc')
@@ -26,9 +27,18 @@ class PSNThread(QtCore.QThread):
             msgBox.setDefaultButton(QMessageBox.StandardButton.Ok)
             msgBox.exec_()
             return None
-        self.psn: psnawp.PSNAWP = psnawp.PSNAWP(self.settings.value('ssno'))
+
+        try:
+            self.psn: psnawp.PSNAWP = psnawp.PSNAWP(self.settings.value('ssno'))
+        except psnawp_exceptions.PSNAWPAuthenticationError:
+            self.parent.showMessage("PlayStationDiscordRPC", "NPSSO Token is not valid anymore, please get a new one through the setting and replace it.")
+            self.parent.settingsWindow.show()
+        except psnawp_exceptions.PSNAWPAuthenticationError:
+            self.parent.showMessage("PlayStationDiscordRPC", "Error Authenticating with the Current NPSSO")
+
         if self.settings.value('debug', type=bool):
             print(f"Initialized PSN with a intervall of {self.settings.value('sample_delay')}")
+            self.parent.showMessage("PlayStationDiscordRPC", f"Initialized PSN with a intervall of {self.settings.value('sample_delay')}")
 
         return super(PSNThread, self).start()
 
@@ -42,6 +52,7 @@ class PSNThread(QtCore.QThread):
     def run(self):
         while self.settings.value('enabled', type=bool):
             if self.psn is None:
+                self.parent.setStatus(False)
                 break
             user = self.psn.user(account_id=self.psn.me().get_account_id()).get_presence()
             self.user_presence.emit(user)
