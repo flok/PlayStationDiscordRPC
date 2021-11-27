@@ -19,11 +19,3 @@ Below you see a game displayed as a status inside discord including the game ico
 |         Discord Status                      |                Status Popup                 |
 |---------------------------------------------|---------------------------------------------|
 | <img src="https://i.imgur.com/kVRAESs.png"> | <img src="https://i.imgur.com/7nxJDrh.png"> |
-
-
-
-# Support
-
-If you need any support i create a Discord which is open to all people contributing or needing help
-
-[Discord Invite](https://discord.gg/9xHQufFbsb)
