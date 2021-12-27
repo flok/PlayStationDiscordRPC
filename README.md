@@ -4,7 +4,7 @@ PlayStation Discord RPC Client is a Qt TrayIcon application that fetches the cur
 
 # Supported Games
 
-The supported game repo is located at [PlayStationDiscordRPC_Games](https://github.com/flok/PlayStationDiscordRPC_Games). If you have a new game that you want to get supported head over there and create a pull request with the needed information. 
+Since the latest discord update it allowes the usage of image links as a image_id which results in support for all available games on the PS network without keeping a seperate database available.
 
 # Installation
 
@@ -19,11 +19,3 @@ Below you see a game displayed as a status inside discord including the game ico
 |         Discord Status                      |                Status Popup                 |
 |---------------------------------------------|---------------------------------------------|
 | <img src="https://i.imgur.com/kVRAESs.png"> | <img src="https://i.imgur.com/7nxJDrh.png"> |
-
-
-
-# Support
-
-If you need any support i create a Discord which is open to all people contributing or needing help
-
-[Discord Invite](https://discord.gg/9xHQufFbsb)
