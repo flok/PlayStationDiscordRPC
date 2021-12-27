@@ -99,7 +99,7 @@ class Window(QSystemTrayIcon):
         gameTitle = gameinfo['titleName']
 
 
-        imageID = gameinfo['npTitleId'].lower()
+        imageID = gameinfo['conceptIconUrl']
 
         # abort updating the game status with the same game
         # if we do this we reset the timer
