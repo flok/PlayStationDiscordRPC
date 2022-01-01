@@ -67,11 +67,28 @@ class Window(QSystemTrayIcon):
 
 
     def setupDiscord(self):
+
+        while(self.checkDiscordRunning() is False):
+            self.showMessage("PlayStationDiscordRPC", "Discord not running. Trying in 3 second again", QSystemTrayIcon.MessageIcon.Information, 1000)
+            time.sleep(3)
+
         if self.settings.value('debug', type=bool):
             print(f"Initialize Discord presence with client id: {CLIENT_ID}")
             self.showMessage("PlayStationDiscordRPC", "Initialized Discord Presence", QSystemTrayIcon.MessageIcon.Information, 2000)
+
         self.discord = Presence(CLIENT_ID)
         self.discord.connect()
+
+    def checkDiscordRunning(self):
+        import psutil
+        ret = False
+        try:
+            # Check if process name contains the given name string.
+            ret = any("discord" in p.name().lower() for p in psutil.process_iter())
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+
+        return ret
 
     def startPSNThread(self):
         self.PSNThread = PSNThread(self)
