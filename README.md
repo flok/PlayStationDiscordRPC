@@ -1,5 +1,11 @@
 # PlayStationDiscordRPC
 
+# **Project Abandoned due to the official release PlayStation Network for Discord as a connection Service**
+
+
+
+-------------------------------------------------------------------------------------------------------------------
+
 PlayStation Discord RPC Client is a Qt TrayIcon application that fetches the current gaming status of the associated account and display the GameTitle and Image on your Discord Profile using the RPC Framework.
 
 # Supported Games
